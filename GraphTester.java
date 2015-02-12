@@ -2,7 +2,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 
+ *
  * Created by jtryon on 2/9/15.
  */
 public class GraphTester {
@@ -34,6 +34,10 @@ public class GraphTester {
 
         System.out.println("The vertices in the graph: " + g.vertices());
         System.out.println("The edges in the graph: " + g.edges());
+
+        System.out.println("The out neighbors of A: " + g.adjacentVertices(v1));
+        System.out.println("The out neighbors of B: " + g.adjacentVertices(v2));
+
     }
 }
 

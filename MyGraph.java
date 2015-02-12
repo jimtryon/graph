@@ -59,8 +59,12 @@ public class MyGraph implements Graph {
      */
     public Collection<Vertex> adjacentVertices(Vertex v) {
 
+        if (!myVertices.contains(v)) {
 
-        return null;
+            throw new IllegalArgumentException("Vertices does not exist");
+        }
+
+        return outNeighbors(v);
 
     }
 
@@ -72,8 +76,41 @@ public class MyGraph implements Graph {
      * @return an iterable collection of vertices that are reachable from v in the graph
      */
     public Collection<Vertex> reachableVertices(Vertex v) {
-        // YOUR CODE HERE
-        return null;
+        Set<Vertex> result = new HashSet<Vertex>();
+        Set<Vertex> frontier = new HashSet<Vertex>();
+        Set<Vertex> nextFrontier = new HashSet<Vertex>();
+
+        // a vertex is reachable to itself (path length 0)
+        result.add(v);
+
+        frontier.add(v);
+
+        while (!frontier.isEmpty()) {
+
+            Iterator itr = frontier.iterator();
+
+            // start at level 0, get all level 1 nodes
+            // union the nodes into the result set
+            // build up level 1
+
+            while (itr.hasNext()) {
+                Vertex current = (Vertex) itr.next();
+                Set<Vertex> outNodes = outNeighbors(current);
+
+                // remove all outneighbors we've already visited
+                outNodes.removeAll(result);
+                nextFrontier.addAll(outNodes);
+                outNodes.clear();
+            }
+
+            result.addAll(nextFrontier);
+
+            frontier.clear();
+            frontier.addAll(nextFrontier);
+            nextFrontier.clear();
+        }
+
+        return result;
 
     }
 
@@ -121,10 +158,52 @@ public class MyGraph implements Graph {
      * @throws IllegalArgumentException if a or b does not exist.
      */
     public int shortestPath(Vertex a, Vertex b, List<Vertex> path) {
+
+        // Single Source Shortest Path
+        
         return -1;
 
-        // YOUR CODE HERE
 
     }
 
+    // When provided with a vertex called v
+    // It should return a set of all the "incoming"
+    // neighbor vertexes of v
+    public Set<Vertex> inNeighbors(Vertex v) {
+        Set<Vertex> result = new HashSet<Vertex>();
+        for (Edge e : myEdges) {
+            if (e.to.equals(v)) {
+                // This is an "in-neighbor"
+                result.add(e.from);
+            }
+        }
+
+        return result;
+    }
+
+    public Set<Vertex> outNeighbors(Vertex v) {
+        Set<Vertex> result = new HashSet<Vertex>();
+        for (Edge e : myEdges) {
+            if (e.from.equals(v)) {
+                // This is an "in-neighbor"
+                result.add(e.to);
+            }
+        }
+
+        return result;
+    }
+
+    public Set<Vertex> minNodes(Vertex v) {
+        // create an empty set
+        Set<Vertex> result = new HashSet<Vertex>();
+
+        for (Vertex node : myVertices) {
+            Set<Vertex> inNbrs = inNeighbors(node);
+
+            if (inNbrs.isEmpty()) {
+                result.add(node);
+            }
+        }
+        return result;
+    }
 }
