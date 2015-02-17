@@ -1,6 +1,7 @@
 /**
  * Created by jtryon on 2/9/15.
  */
+
 /**
  * Representation of a graph vertex
  */

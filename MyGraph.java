@@ -61,10 +61,14 @@ public class MyGraph implements Graph {
 
         if (!myVertices.contains(v)) {
 
-            throw new IllegalArgumentException("Vertices does not exist");
+            throw new IllegalArgumentException("Vertex does not exist");
         }
 
-        return outNeighbors(v);
+        LinkedList<Vertex> result = new LinkedList<Vertex>();
+
+        result.addAll(outNeighbors(v));
+
+        return result;
 
     }
 
@@ -95,7 +99,7 @@ public class MyGraph implements Graph {
 
             while (itr.hasNext()) {
                 Vertex current = (Vertex) itr.next();
-                Set<Vertex> outNodes = outNeighbors(current);
+                Collection<Vertex> outNodes = outNeighbors(current);
 
                 // remove all outneighbors we've already visited
                 outNodes.removeAll(result);
@@ -120,10 +124,35 @@ public class MyGraph implements Graph {
      * @return an ordered list of vertices in topological sort order
      */
     public List<Vertex> topologicalSort() {
-        // YOUR CODE HERE
-        return null;
-    }
 
+        // Create an empty set to hold the sorted vertices
+        LinkedList<Vertex> sortedVerts = new LinkedList<Vertex>();
+
+        boolean added = false;
+
+        // Loop through the vertices and test the sorted order
+        for (Vertex v : myVertices) {
+            for (Vertex w: sortedVerts) {
+                // Test if v has fewer neighbors, add it to the list
+                if (inNeighbors(v).size() < inNeighbors(w).size()) {
+                    sortedVerts.add(sortedVerts.indexOf(w), v); // Add at the index of w
+                    added = true; // Does not continue adding outside loop
+                    break;
+                }
+
+            }
+
+            // Test if was added in foreach loop
+            if (added) {
+                added = false; // Reset added
+                continue;
+            }
+
+            // Add to the end
+            sortedVerts.add(v);
+        }
+        return sortedVerts;
+    }
     /**
      * Test whether vertex b is adjacent to vertex a (i.e. a -> b) in a directed graph.
      * Assumes that we do not have negative cost edges in the graph.
@@ -136,9 +165,21 @@ public class MyGraph implements Graph {
      */
     public int isAdjacent(Vertex a, Vertex b) {
 
-        // YOUR CODE HERE
-        return -1;
 
+        // Check to see if a or b does not exist
+        if (!myVertices.contains(a) || !myVertices.contains(b)) {
+            throw new IllegalArgumentException("Vertex a or b does not exist");
+        }
+
+
+        // Loop through the edges
+        for (Edge e : myEdges) {
+            // If the two vertices are adjacent, return the weight
+            if (e.from.equals(a) && e.to.equals(b)) {
+                return e.w;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -160,7 +201,7 @@ public class MyGraph implements Graph {
     public int shortestPath(Vertex a, Vertex b, List<Vertex> path) {
 
         // Single Source Shortest Path
-        
+
         return -1;
 
 
@@ -169,38 +210,54 @@ public class MyGraph implements Graph {
     // When provided with a vertex called v
     // It should return a set of all the "incoming"
     // neighbor vertexes of v
-    public Set<Vertex> inNeighbors(Vertex v) {
-        Set<Vertex> result = new HashSet<Vertex>();
+    public Collection<Vertex> inNeighbors(Vertex v) {
+        if (!myVertices.contains(v)) {
+            throw new IllegalArgumentException();
+        }
+
+        LinkedList<Vertex> inNeighbors = new LinkedList<Vertex>();
         for (Edge e : myEdges) {
             if (e.to.equals(v)) {
                 // This is an "in-neighbor"
-                result.add(e.from);
+                inNeighbors.add(e.from);
             }
         }
 
-        return result;
+        return inNeighbors;
     }
 
-    public Set<Vertex> outNeighbors(Vertex v) {
-        Set<Vertex> result = new HashSet<Vertex>();
-        for (Edge e : myEdges) {
-            if (e.from.equals(v)) {
-                // This is an "in-neighbor"
-                result.add(e.to);
+    public Collection<Vertex> outNeighbors(Vertex v) {
+        // Test if v is contained in the vertices, if not throw exception
+        if(!(vertices().contains(v))){
+            throw new IllegalArgumentException();
+        }
+
+        // Create a list to hold the adjacent vertices
+        LinkedList<Vertex> adjacentVerts = new LinkedList<Vertex>();
+
+
+        //Test the edge collection to find the edges with source v
+        for(Edge e : myEdges){
+            // If e.from equals v, add e.to to adj.verts
+            if(e.from.equals(v)){
+                adjacentVerts.add(e.to);
             }
         }
 
-        return result;
+        //Convert to set
+        Set<Vertex> adjVerts = new HashSet<Vertex>();
+        adjVerts.addAll(adjacentVerts);
+
+        //return adjacentVerts
+        return adjVerts;
     }
 
-    public Set<Vertex> minNodes(Vertex v) {
-        // create an empty set
-        Set<Vertex> result = new HashSet<Vertex>();
+    public Collection<Vertex> minNodes(Vertex v) {
+        // create an empty collection
+        LinkedList<Vertex> result = new LinkedList<Vertex>();
 
         for (Vertex node : myVertices) {
-            Set<Vertex> inNbrs = inNeighbors(node);
-
-            if (inNbrs.isEmpty()) {
+            if (inNeighbors(v).isEmpty()) {
                 result.add(node);
             }
         }
