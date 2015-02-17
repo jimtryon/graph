@@ -27,10 +27,9 @@ public class GraphTester {
         Edge e2 = new Edge(v1, v3, 2);  // A to C
         Edge e3 = new Edge(v1, v4, 10);  // A to D
         Edge e4 = new Edge(v2, v3, 5);  // B to C
-        Edge e5 = new Edge(v2, v4, 9); // B to E
+        Edge e5 = new Edge(v2, v5, 9); // B to E
         Edge e6 = new Edge(v3, v4, 3);  // C to D
-        Edge e7 = new Edge(v5, v4, 4);  // D to E
-        Edge e8 = new Edge(v5, v3, 6); // E to C
+        Edge e7 = new Edge(v4, v5, 4);  // D to E
 
         Set<Edge> edges = new HashSet<Edge>();
 
@@ -41,7 +40,6 @@ public class GraphTester {
         edges.add(e5);
         edges.add(e6);
         edges.add(e7);
-        edges.add(e8);
 
 
         Graph g = new MyGraph(nodes, edges);
